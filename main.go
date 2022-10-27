@@ -1,8 +1,16 @@
 package main
 
-import "fmt"
+import (
+    "github.com/Rene-Michel99/API-GO-REST/database"
+    "github.com/gofiber/fiber/v2"
+)
 
 func main(){
-    var x int = 10
-    fmt.Println("Hello word", x)
+	database.ConnectDB()
+
+    app := fiber.New()
+
+    setupRoutes(app)
+
+    app.Listen(":3000")
 }

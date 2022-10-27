@@ -1,3 +1,5 @@
 .fleet
 .vscode
 .idea
+.env
+tmp

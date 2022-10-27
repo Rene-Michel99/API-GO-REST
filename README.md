@@ -10,11 +10,17 @@ Projeto de sistema de biblioteca usando GO com REST, Docker e PostgreSQL.
 Dentro do projeto API-GO-REST
 
 ```bash
-go run main.go
+go run main.go -b 0.0.0.0
 ```
 
 ou via Docker
 
 ```bash
 sudo docker compose run --service-ports web bash
+sudo docker compose up
+```
+
+Para rodar o PostgreSQL
+```bash
+sudo docker compose -f postgres.yaml up
 ```

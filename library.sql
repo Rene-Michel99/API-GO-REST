@@ -2,7 +2,7 @@ CREATE DATABASE library;
 
 USE DATABASE library;
 
-CREATE TABLE Livro (
+CREATE TABLE Book (
     id SERIAL PRIMARY KEY,
     name varchar(256),
     author varchar(256),
