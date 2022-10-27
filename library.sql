@@ -1,0 +1,12 @@
+CREATE DATABASE library;
+
+USE DATABASE library;
+
+CREATE TABLE Livro (
+    id SERIAL PRIMARY KEY,
+    name varchar(256),
+    author varchar(256),
+    synopsis text,
+    launch_date date,
+    copy_qnt int
+);
