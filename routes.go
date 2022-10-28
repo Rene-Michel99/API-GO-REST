@@ -6,6 +6,22 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func Insert(c *fiber.Ctx) error {
+    book := new(models.Book)
+
+    error := c.BodyParser(book)
+    if error != nil {
+        return c.Status(500).JSON(fiber.Map{"message": error.Error()})
+    }
+
+    result := database.Insert(book)
+
+    if result.RowsAffected > 0 {
+        return c.Status(200).JSON(book)
+    }
+    return c.Status(500).JSON(result.Error)
+}
+
 func Get(c *fiber.Ctx) error {
 	book := new(models.Book)
 
@@ -17,7 +33,7 @@ func Get(c *fiber.Ctx) error {
 	result := database.Get(book)
 
 	if result.RowsAffected > 0 {
-		return c.Status(200).JSON(result.RowsAffected)
+        return c.Status(200).JSON(book)
 	}
 	return c.Status(500).JSON(result.Error)
 }
@@ -55,6 +71,7 @@ func Delete(c *fiber.Ctx) error {
 }
 
 func setupRoutes(app *fiber.App) {
+    app.Post("/create", Insert)
 	app.Get("/get", Get)
 	app.Put("/update", Update)
 	app.Delete("/delete", Delete)

@@ -54,8 +54,13 @@ func ConnectDB() {
 	DATABASE = DBinstance{DB: db}
 }
 
+
+func Insert(book *models.Book) *gorm.DB {
+    return DATABASE.DB.Create(&book)
+}
+
 func Get(book *models.Book) *gorm.DB {
-	return DATABASE.DB.Where("id = ? OR name = ?", book.ID, book.Name).Find(&models.Book{})
+    return DATABASE.DB.Where("id = ? OR name = ?", book.ID, book.Name).Find(&book)
 }
 
 func Update(book *models.Book) *gorm.DB {
