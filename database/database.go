@@ -54,10 +54,10 @@ func ConnectDB() {
     DATABASE = DBinstance{DB: db}
 }
 
-func Update(book *models.Book) {
-    DATABASE.DB.Save(book)
+func Update(book *models.Book) *gorm.DB {
+    return DATABASE.DB.Model(&models.Book{}).Where("id = ?", book.ID).Update("CopyQnt", book.CopyQnt)
 }
 
-func Delete(book *models.Book) {
-    DATABASE.DB.Delete(book)
+func Delete(book *models.Book) *gorm.DB {
+    return DATABASE.DB.Delete(book)
 }

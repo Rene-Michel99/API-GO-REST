@@ -15,9 +15,12 @@ func Update(c *fiber.Ctx) error {
         return c.Status(500).JSON(fiber.Map{"message": error.Error()})
     }
 
-    database.Update(book)
+    result := database.Update(book)
 
-    return c.Status(200).JSON(book)
+    if (result.RowsAffected > 0) {
+        return c.Status(200).JSON(result.RowsAffected)
+    }
+    return c.Status(500).JSON(result.Error)
 }
 
 func Delete(c *fiber.Ctx) error {
@@ -28,18 +31,16 @@ func Delete(c *fiber.Ctx) error {
         return c.Status(500).JSON(fiber.Map{"message": error.Error()})
     }
 
-    database.Delete(book)
+    result := database.Delete(book)
 
-    return c.Status(200).JSON(book)
-}
-
-func Home(c *fiber.Ctx) error {
-	return c.SendString("Hello world")
+    if (result.RowsAffected > 0) {
+        return c.Status(200).JSON(result.RowsAffected)
+    }
+    return c.Status(500).JSON(result.Error)
 }
 
 
 func setupRoutes(app *fiber.App) {
-	app.Get("/", Home)
-    app.Get("/update", Update)
-    app.Get("/delete", Delete)
+    app.Put("/update", Update)
+    app.Delete("/delete", Delete)
 }

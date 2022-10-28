@@ -8,10 +8,10 @@ import (
 
 type Book struct{
     gorm.Model
-    id int                  `json:"id" gorm:primaryKey;autoIncrement`
-    name string             `json:"name"`
-    author string           `json:"author"`
-    synopsis string         `json:"synopsis"`
-    launchDate time.Time    `json:"launchDate"`
-    copyQnt int             `json:"copyQnt"`
+    ID int                  `json:"id" gorm:primaryKey;autoIncrement`
+    Name string             `json:"name" gorm:text;not null;default:null`
+    Author string           `json:"author" gorm:text;not null;default:null`
+    Synopsis string         `json:"synopsis" gorm:text;not null;default:null`
+    LaunchDate time.Time    `json:"launchDate" gorm:date;not null;default:null`
+    CopyQnt int32           `json:"copyQnt" gorm:int;not null;default:null`
 }
