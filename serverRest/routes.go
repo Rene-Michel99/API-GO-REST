@@ -1,12 +1,16 @@
 package main
 
 import (
-	"github.com/Rene-Michel99/API-GO-REST/models"
 	"github.com/gofiber/fiber/v2"
 )
 
+type Book struct{
+    Name string
+    Author string
+}
+
 func Insert(c *fiber.Ctx) error {
-    book := new(models.Book)
+    book := new(Book)
 
     error := c.BodyParser(book)
     if error != nil {
@@ -18,7 +22,7 @@ func Insert(c *fiber.Ctx) error {
 }
 
 func Get(c *fiber.Ctx) error {
-	book := new(models.Book)
+	book := new(Book)
 
 	error := c.BodyParser(book)
 	if error != nil {
@@ -30,7 +34,7 @@ func Get(c *fiber.Ctx) error {
 }
 
 func Update(c *fiber.Ctx) error {
-	book := new(models.Book)
+	book := new(Book)
 
 	error := c.BodyParser(book)
     if (error != nil) {
@@ -42,7 +46,7 @@ func Update(c *fiber.Ctx) error {
 }
 
 func Delete(c *fiber.Ctx) error {
-	book := new(models.Book)
+	book := new(Book)
 
 	error := c.BodyParser(book)
 	if error != nil {

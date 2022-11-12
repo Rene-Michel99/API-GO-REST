@@ -1,11 +1,11 @@
-package database
+package main
 
 import (
 	"fmt"
 	"log"
 	"os"
 	"time"
-	"github.com/Rene-Michel99/API-GO-REST/models"
+	"github.com/Rene-Michel99/API-GO-REST/database/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
