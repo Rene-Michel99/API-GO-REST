@@ -19,8 +19,3 @@ ou via Docker
 sudo docker compose run --service-ports web bash
 sudo docker compose up
 ```
-
-Para rodar o PostgreSQL
-```bash
-sudo docker compose -f postgres.yaml up
-```

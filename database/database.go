@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"time"
-
 	"github.com/Rene-Michel99/API-GO-REST/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -20,8 +19,7 @@ var DATABASE DBinstance
 
 func ConnectDB() {
 	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=5432 sslmode=disable",
-		os.Getenv("DB_IPADDRESS"),
+		"host=db user=%s password=%s dbname=%s port=5432 sslmode=disable",
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_NAME"),

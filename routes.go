@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/Rene-Michel99/API-GO-REST/database"
 	"github.com/Rene-Michel99/API-GO-REST/models"
 	"github.com/gofiber/fiber/v2"
 )
@@ -14,12 +13,8 @@ func Insert(c *fiber.Ctx) error {
         return c.Status(500).JSON(fiber.Map{"message": error.Error()})
     }
 
-    result := database.Insert(book)
 
-    if result.RowsAffected > 0 {
-        return c.Status(200).JSON(book)
-    }
-    return c.Status(500).JSON(result.Error)
+    return c.Status(500).JSON(book)
 }
 
 func Get(c *fiber.Ctx) error {
@@ -30,28 +25,20 @@ func Get(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"message": error.Error()})
 	}
 
-	result := database.Get(book)
 
-	if result.RowsAffected > 0 {
-        return c.Status(200).JSON(book)
-	}
-	return c.Status(500).JSON(result.Error)
+    return c.Status(500).JSON(book)
 }
 
 func Update(c *fiber.Ctx) error {
 	book := new(models.Book)
 
 	error := c.BodyParser(book)
-	if error != nil {
+    if (error != nil) {
 		return c.Status(500).JSON(fiber.Map{"message": error.Error()})
 	}
 
-	result := database.Update(book)
 
-	if result.RowsAffected > 0 {
-		return c.Status(200).JSON(result.RowsAffected)
-	}
-	return c.Status(500).JSON(result.Error)
+    return c.Status(500).JSON(book)
 }
 
 func Delete(c *fiber.Ctx) error {
@@ -62,12 +49,7 @@ func Delete(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"message": error.Error()})
 	}
 
-	result := database.Delete(book)
-
-	if result.RowsAffected > 0 {
-		return c.Status(200).JSON(result.RowsAffected)
-	}
-	return c.Status(500).JSON(result.Error)
+	return c.Status(500).JSON(book)
 }
 
 func setupRoutes(app *fiber.App) {
