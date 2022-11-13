@@ -5,97 +5,89 @@ import (
 	"net"
 	"net/http"
 	"net/rpc"
-	"time"
+    "errors"
+    "github.com/Rene-Michel99/API-GO-REST/database/models"
 )
+
+// Objeto de resposta para a aplicação REST
+type Response struct{
+    Status int64
+    Book models.Book
+}
 
 type API int
 
-type Book struct {
-	ID         int
-	Name       string
-	Author     string
-	Synopsis   string
-	LaunchDate time.Time
-	CopyQnt    int32
+// CRUD
+func (a *API) GetBook(book models.Book, reply *Response) error {
+    if (book == models.Book{}) {
+        return errors.New("None object has sent")
+    }
+    result := Get(&book)
+
+    reply.Status = result.RowsAffected
+    reply.Book = book
+
+    return nil
 }
 
-var listTest []Book
+func (a *API) AddBook(book models.Book, reply *Response) error {
+    if (book == models.Book{}) {
+        return errors.New("None object has sent")
+    }
+    result := Insert(&book)
 
-func (a *API) GetDB(empty string, reply *[]Book) error {
-	*reply = listTest
-	return nil
+    reply.Status = result.RowsAffected
+    reply.Book = book
+
+    return nil
 }
 
-func (a *API) GetByName(name string, reply *Book) error {
-	var getItem Book
+func (a *API) UpdateBook(book models.Book, reply *Response) error {
+    if (book == models.Book{}) {
+        return errors.New("None object has sent")
+    }
+    result := Update(&book)
 
-	for _, val := range listTest {
-		if val.Name == name {
-			getItem = val
-		}
-	}
+    reply.Status = result.RowsAffected
+    reply.Book = book
 
-	*reply = getItem
-
-	return nil
+    return nil
 }
 
-func (a *API) AddItem(item Book, reply *Book) error {
-	log.Printf("Adding item ", item)
-	listTest = append(listTest, item)
-	*reply = item
-	return nil
+func (a *API) DeleteBook(book models.Book, reply *Response) error {
+    if (book == models.Book{}) {
+        return errors.New("None object has sent")
+    }
+    result := Delete(&book)
+
+    reply.Status = result.RowsAffected
+    reply.Book = book
+
+    return nil
 }
 
-func (a *API) EditItem(item Book, reply *Book) error {
-	var changed Book
-
-	for idx, val := range listTest {
-		if val.Name == item.Name {
-			listTest[idx] = Book{item.Name, item.Author}
-			changed = listTest[idx]
-		}
-	}
-
-	*reply = changed
-	return nil
-}
-
-func (a *API) DeleteItem(item Book, reply *Book) error {
-	var del Book
-
-	for idx, val := range listTest {
-		if val.Name == item.Name && val.Author == item.Author {
-			listTest = append(listTest[:idx], listTest[idx+1:]...)
-			del = item
-			break
-		}
-	}
-
-	*reply = del
-	return nil
-}
-
+// Servidor RPC
 func main() {
-	ConnectDB()
+	ConnectDB()   // Conexão com o banco
 	rpcServerPort := ":4040"
-	var api = new(API)
-	error := rpc.Register(api)
 
-	if error != nil {
+	var api = new(API)
+	error := rpc.Register(api) // Endereça a API RPC
+
+    if (error != nil) {
 		log.Fatal("Error registering API", error)
 	}
 
-	rpc.HandleHTTP()
+	rpc.HandleHTTP()  // utiliza o HTTP
 	listener, error := net.Listen("tcp", rpcServerPort)
 
-	if error != nil {
+	if (error != nil) {
 		log.Fatal("Error listening on PORT: ", rpcServerPort, error)
 	}
 
 	log.Printf("RPC Server on port %s", rpcServerPort)
-	error = http.Serve(listener, nil)
-	if error != nil {
+	error = http.Serve(listener, nil)  // Disponibiliza acesso ao server RPC via HTTP
+    if (error != nil) {
 		log.Fatal("Error initializinng server ", error)
 	}
 }

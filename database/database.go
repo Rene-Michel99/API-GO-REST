@@ -17,6 +17,8 @@ type DBinstance struct {
 
 var DATABASE DBinstance
 
+
+// Criação do objeto de conexão com o POSTGRESQL
 func ConnectDB() {
 	dsn := fmt.Sprintf(
 		"host=db user=%s password=%s dbname=%s port=5432 sslmode=disable",
@@ -52,7 +54,7 @@ func ConnectDB() {
 	DATABASE = DBinstance{DB: db}
 }
 
-
+// Métodos CRUD do banco com ORM
 func Insert(book *models.Book) *gorm.DB {
     return DATABASE.DB.Create(&book)
 }
