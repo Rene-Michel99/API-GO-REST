@@ -16,6 +16,6 @@ go run main.go -b 0.0.0.0
 ou via Docker
 
 ```bash
-sudo docker compose run --service-ports web bash
+sudo docker compose build
 sudo docker compose up
 ```
