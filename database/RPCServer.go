@@ -1,96 +1,101 @@
 package main
 
 import (
-    "log"
-    "net"
-    "net/rpc"
-    "net/http"
+	"log"
+	"net"
+	"net/http"
+	"net/rpc"
+	"time"
 )
 
 type API int
 
-type Book struct{
-    Name string
-    Author string
+type Book struct {
+	ID         int
+	Name       string
+	Author     string
+	Synopsis   string
+	LaunchDate time.Time
+	CopyQnt    int32
 }
 
 var listTest []Book
 
 func (a *API) GetDB(empty string, reply *[]Book) error {
-    *reply = listTest
-    return nil
+	*reply = listTest
+	return nil
 }
 
 func (a *API) GetByName(name string, reply *Book) error {
-    var getItem Book
+	var getItem Book
 
-    for _, val := range listTest {
-        if val.Name == name {
-            getItem = val
-        }
-    }
+	for _, val := range listTest {
+		if val.Name == name {
+			getItem = val
+		}
+	}
 
-    *reply = getItem
+	*reply = getItem
 
-    return nil
+	return nil
 }
 
 func (a *API) AddItem(item Book, reply *Book) error {
-    log.Printf("Adding item ", item)
-    listTest = append(listTest, item)
-    *reply = item
-    return nil
+	log.Printf("Adding item ", item)
+	listTest = append(listTest, item)
+	*reply = item
+	return nil
 }
 
 func (a *API) EditItem(item Book, reply *Book) error {
-    var changed Book
+	var changed Book
 
-    for idx, val := range listTest {
-        if val.Name == item.Name {
-            listTest[idx] = Book{item.Name, item.Author}
-            changed = listTest[idx]
-        }
-    }
+	for idx, val := range listTest {
+		if val.Name == item.Name {
+			listTest[idx] = Book{item.Name, item.Author}
+			changed = listTest[idx]
+		}
+	}
 
-    *reply = changed
-    return nil
+	*reply = changed
+	return nil
 }
 
 func (a *API) DeleteItem(item Book, reply *Book) error {
-    var del Book
+	var del Book
 
-    for idx, val := range listTest {
-        if val.Name == item.Name && val.Author == item.Author {
-            listTest = append(listTest[:idx], listTest[idx+1:]...)
-            del = item
-            break
-        }
-    }
+	for idx, val := range listTest {
+		if val.Name == item.Name && val.Author == item.Author {
+			listTest = append(listTest[:idx], listTest[idx+1:]...)
+			del = item
+			break
+		}
+	}
 
-    *reply = del
-    return nil
+	*reply = del
+	return nil
 }
 
 func main() {
-    ConnectDB()
-    rpcServerPort := ":4040"
-    var api = new(API)
-    error := rpc.Register(api)
+	ConnectDB()
+	rpcServerPort := ":4040"
+	var api = new(API)
+	error := rpc.Register(api)
 
-    if (error != nil){
-        log.Fatal("Error registering API", error)
-    }
+	if error != nil {
+		log.Fatal("Error registering API", error)
+	}
 
-    rpc.HandleHTTP()
-    listener, error := net.Listen("tcp", rpcServerPort)
+	rpc.HandleHTTP()
+	listener, error := net.Listen("tcp", rpcServerPort)
 
-    if (error != nil){
-        log.Fatal("Error listening on PORT: ", rpcServerPort, error)
-    }
+	if error != nil {
+		log.Fatal("Error listening on PORT: ", rpcServerPort, error)
+	}
 
-    log.Printf("RPC Server on port %s", rpcServerPort)
-    error = http.Serve(listener, nil)
-    if(error != nil) {
-        log.Fatal("Error initializinng server ", error)
-    }
+	log.Printf("RPC Server on port %s", rpcServerPort)
+	error = http.Serve(listener, nil)
+	if error != nil {
+		log.Fatal("Error initializinng server ", error)
+	}
 }
